@@ -54,7 +54,7 @@
        [:button {:type "submit"} "Start"]])))
 
 (defn display-field [letter]
-  (if (guesses/has? letter)
+  (if (or (guesses/has? letter) (over?))
     letter
     (if (= letter " ") " " "_")))
 
