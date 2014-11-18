@@ -13,4 +13,5 @@ goog.addDependency("../clojure/set.js", ['clojure.set'], ['cljs.core']);
 goog.addDependency("../hangman/word.js", ['hangman.word'], ['reagent.core', 'cljs.core', 'clojure.set', 'clojure.string']);
 goog.addDependency("../hangman/gallows.js", ['hangman.gallows'], ['cljs.core']);
 goog.addDependency("../hangman/constants.js", ['hangman.constants'], ['cljs.core', 'hangman.gallows']);
-goog.addDependency("../hangman/core.js", ['hangman.core'], ['reagent.core', 'cljs.core', 'hangman.gallows', 'clojure.set', 'hangman.word', 'hangman.constants', 'clojure.string']);
+goog.addDependency("../hangman/guesses.js", ['hangman.guesses'], ['reagent.core', 'cljs.core', 'clojure.set', 'hangman.word', 'clojure.string']);
+goog.addDependency("../hangman/core.js", ['hangman.core'], ['reagent.core', 'cljs.core', 'hangman.gallows', 'clojure.set', 'hangman.word', 'hangman.constants', 'clojure.string', 'hangman.guesses']);

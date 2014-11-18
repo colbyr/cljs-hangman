@@ -18,3 +18,6 @@
 
 (defn update! [new-word]
   (swap! word #(identity new-word)))
+
+(defn reset! []
+  (swap! word #(identity "")))
