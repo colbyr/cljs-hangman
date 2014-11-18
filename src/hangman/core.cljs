@@ -9,8 +9,8 @@
 
 (enable-console-print!)
 
-
-(def started (r/atom false))
+(defn started? []
+  (not= (word/as-string) ""))
 
 (defn step []
   (count (guesses/incorrect)))
@@ -26,12 +26,7 @@
 
 (defn new-game! []
   (guesses/reset!)
-  (swap! started #(identity false))
   (word/reset!))
-
-(defn start []
-  (if-not (= (word/as-string) "")
-    (swap! started #(identity true))))
 
 (defn letter-buttons []
   (vec
@@ -48,11 +43,15 @@
     [letter-buttons]))
 
 (defn form []
-  [:div
-   [:input {:on-change #(word/update! (-> % .-target .-value))
-            :type "password"
-            :value (word/as-string)}]
-   [:button {:on-click start} "Start"]])
+  (let [next-word (r/atom "")]
+    (fn []
+      [:form {:on-submit (fn [e]
+                           (.preventDefault e)
+                           (word/update! @next-word))}
+       [:input {:on-change #(swap! next-word (fn [] (-> % .-target .-value)))
+                :type "password"
+                :value @next-word}]
+       [:button {:type "submit"} "Start"]])))
 
 (defn display-field [letter]
   (if (guesses/has? letter)
@@ -63,7 +62,7 @@
   [:pre (str/join " " (map #(display-field %1) (word/as-letters-with-spaces)))])
 
 (defn controls []
-  (if @started
+  (if (started?)
     [:div
      [blanks]
      [next-button]]
