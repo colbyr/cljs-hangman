@@ -3,6 +3,7 @@
             [clojure.string :as str]
             [hangman.constants :as const]
             [hangman.gallows :as gallows]
+            [hangman.word :as word]
             [reagent.core :as r]))
 
 (enable-console-print!)
@@ -10,34 +11,24 @@
 
 (def guesses (r/atom #{}))
 (def started (r/atom false))
-(def word (r/atom ""))
-
-(defn word-letters-and-spaces []
-  (map str @word))
-
-(defn word-letters []
-  (filter #(not= % " ") (map str/lower-case (word-letters-and-spaces))))
-
-(defn word-set []
-  (apply sorted-set (word-letters)))
 
 (defn correct []
-  (set/intersection (word-set) @guesses))
+  (set/intersection (word/as-set-of-letters) @guesses))
 
 (defn incorrect []
-  (set/difference @guesses (word-set)))
+  (set/difference @guesses (word/as-set-of-letters)))
 
 (defn step []
   (count (incorrect)))
 
 (defn remaining []
-  (set/difference (word-set) @guesses))
+  (set/difference (word/as-set-of-letters) @guesses))
 
 (defn lost? []
   (= (step) const/hanged))
 
 (defn won? []
-  (= (count (correct)) (count (word-set))))
+  (= (count (correct)) (count (word/as-set-of-letters))))
 
 (defn over? []
   (or (won?) (lost?)))
@@ -48,10 +39,10 @@
 (defn reset []
   (swap! guesses #(identity #{}))
   (swap! started #(identity false))
-  (swap! word #(identity "")))
+  (word/update! ""))
 
 (defn start []
-  (if-not (= @word "")
+  (if-not (= (word/as-string) "")
     (swap! started #(identity true))))
 
 (defn letter-buttons []
@@ -70,9 +61,9 @@
 
 (defn form []
   [:div
-   [:input {:on-change (fn [e] (swap! word #(-> e .-target .-value)))
+   [:input {:on-change #(word/update! (-> % .-target .-value))
             :type "password"
-            :value @word}]
+            :value (word/as-string)}]
    [:button {:on-click start} "Start"]])
 
 (defn display-field [letter]
@@ -83,7 +74,7 @@
       "_")))
 
 (defn blanks []
-  [:pre (str/join " " (map #(display-field %) (word-letters-and-spaces)))])
+  [:pre (str/join " " (map #(display-field %) (word/as-letters-with-spaces)))])
 
 (defn controls []
   (if @started
