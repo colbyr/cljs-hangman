@@ -24,5 +24,5 @@
 (defn record! [letter]
   (swap! guesses conj (string/lower-case letter)))
 
-(defn reset! []
-  (swap! guesses (identity #{})))
+(defn clear! []
+  (reset! guesses #{}))

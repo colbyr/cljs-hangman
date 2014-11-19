@@ -25,8 +25,8 @@
   (or (won?) (lost?)))
 
 (defn new-game! []
-  (guesses/reset!)
-  (word/reset!))
+  (guesses/clear!)
+  (word/clear!))
 
 (defn letter-buttons []
   (vec
