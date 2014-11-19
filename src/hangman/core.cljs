@@ -49,6 +49,7 @@
                            (.preventDefault e)
                            (word/update! @next-word))}
        [:input {:on-change #(swap! next-word (fn [] (-> % .-target .-value)))
+                :placeholder "Pick a word; any word!"
                 :type "password"
                 :value @next-word}]
        [:button {:type "submit"} "Start"]])))
