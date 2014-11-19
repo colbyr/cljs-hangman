@@ -1,6 +1,6 @@
 (ns hangman.core
   (:require [clojure.set :as set]
-            [clojure.string :as str]
+            [clojure.string :as string]
             [hangman.constants :as const]
             [hangman.gallows :as gallows]
             [hangman.guesses :as guesses]
@@ -56,10 +56,14 @@
 (defn display-field [letter]
   (if (or (guesses/has? letter) (over?))
     letter
-    (if (= letter " ") " " "_")))
+    (if (= letter " ")
+      " "
+      (if (contains? const/abcs (string/lower-case letter))
+        "_"
+        letter))))
 
 (defn blanks []
-  [:pre (str/join " " (map #(display-field %1) (word/as-letters-with-spaces)))])
+  [:pre (string/join " " (map #(display-field %1) (word/as-letters-with-spaces)))])
 
 (defn controls []
   (if (started?)

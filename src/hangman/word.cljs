@@ -1,6 +1,7 @@
 (ns hangman.word
   (:require [clojure.set :as set]
             [clojure.string :as string]
+            [hangman.constants :as const]
             [reagent.core :as r]))
 
 (def word (r/atom ""))
@@ -11,7 +12,7 @@
   (map str (as-string)))
 
 (defn as-letters []
-  (filter #(not= % " ") (map string/lower-case (as-letters-with-spaces))))
+  (filter #(contains? const/abcs %) (map string/lower-case (as-letters-with-spaces))))
 
 (defn as-set-of-letters []
   (apply sorted-set (as-letters)))
